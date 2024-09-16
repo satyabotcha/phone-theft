@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip"
  
 
 // Reference data for Soho crime statistics
@@ -56,6 +55,7 @@ export default function Home() {
     e.preventDefault();
     if (!postcode.trim()) {
       setError("Please enter a postcode.")
+      console.log(error)
       return
     }
 
