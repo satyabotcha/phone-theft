@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
- 
+import Head from 'next/head';
 
 // Reference data for Soho crime statistics
 const SohoCrimeData = {
@@ -81,85 +81,90 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-cyber-black text-matrix-green py-8 px-4 sm:px-6 lg:px-8 font-matrix relative overflow-hidden">
-      {/* Matrix background animation */}
-      <div className="absolute inset-0 opacity-30 pointer-events-none">
-        {matrixChars.map((column, i) => (
-          <div key={i} className="absolute text-matrix-green text-opacity-75 animate-matrix-rain" 
-               style={{
-                 left: `${i}%`, 
-                 animationDuration: `${5 + Math.random() * 5}s`,
-                 animationDelay: `${-Math.random() * 5}s`
-               }}>
-            {column.map((char, j) => (
-              <div key={j} className="text-sm">{char}</div>
-            ))}
-          </div>
-        ))}
-      </div>
-      
-      <div className="max-w-3xl mx-auto relative z-10">
-        <h1 className="text-5xl font-bold text-center mb-4 text-matrix-green font-matrix tracking-wider">Is my phone safe?</h1>
-        <h2 className="text-2xl text-center mb-8 text-matrix-green font-matrix">Check how likely your phone will be stolen in your area</h2>
-        
-        {/* Postcode input form */}
-        <form onSubmit={handleSubmit} className="mb-8">
-          <div className="flex gap-4">
-            <Input
-              type="text"
-              placeholder="Enter your postcode"
-              value={postcode}
-              onChange={(e) => setPostcode(e.target.value)}
-              className="flex-grow bg-cyber-black text-matrix-green border-matrix-green placeholder-matrix-green placeholder-opacity-50 focus:ring-matrix-green"
-            />
-            <Button type="submit" className="bg-neon-purple hover:bg-purple-700 text-cyber-black font-bold shadow-purple-glow">SCAN</Button>
-          </div>
-        </form>
-
-        {/* Display crime data results */}
-        {crimeData.length > 0 && (
-          <div className="space-y-8">
-            {/* Phone Theft Likelihood Card */}
-            <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
-              <CardHeader>
-                <CardTitle className="text-2xl text-center text-matrix-green">
-                  Phone Theft Likelihood: <span className="text-cyber-yellow font-bold">
-                  {getPhoneStolenLikelihood(crimeData.length)}
-                  </span>
-                </CardTitle>
-              </CardHeader>
-            </Card>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Your Area Crime Data Card */}
-              <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center text-matrix-green">
-                    Your Area
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-3xl font-bold text-neon-purple">{crimeData.length}</p>
-                  <p className="text-sm text-matrix-green opacity-70">Phone Thefts (Last Month)</p>
-                </CardContent>
-              </Card>
-
-              {/* Soho (Highest Risk Area) Crime Data Card */}
-              <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center text-matrix-green">
-                    Soho (Highest Risk Area)
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-3xl font-bold text-cyber-yellow">{SohoCrimeData.numberOfCrimes}</p>
-                  <p className="text-sm text-matrix-green opacity-70">Phone Thefts (Last Month)</p>
-                </CardContent>
-              </Card>
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+      </Head>
+      <div className="min-h-screen bg-cyber-black text-matrix-green py-8 px-4 sm:px-6 lg:px-8 font-matrix relative overflow-hidden">
+        {/* Matrix background animation */}
+        <div className="absolute inset-0 opacity-30 pointer-events-none">
+          {matrixChars.map((column, i) => (
+            <div key={i} className="absolute text-matrix-green text-opacity-75 animate-matrix-rain" 
+                 style={{
+                   left: `${i}%`, 
+                   animationDuration: `${15 + Math.random() * 10}s`,
+                   animationDelay: `${-Math.random() * 15}s`
+                 }}>
+              {column.map((char, j) => (
+                <div key={j} className="text-sm">{char}</div>
+              ))}
             </div>
-          </div>
-        )}
+          ))}
+        </div>
+        
+        <div className="max-w-3xl mx-auto relative z-10">
+          <h1 className="text-5xl font-bold text-center mb-4 text-matrix-green font-matrix tracking-wider">Is my phone safe?</h1>
+          <h2 className="text-2xl text-center mb-8 text-matrix-green font-matrix">Check how likely your phone will be stolen in your area</h2>
+          
+          {/* Postcode input form */}
+          <form onSubmit={handleSubmit} className="mb-8">
+            <div className="flex gap-4">
+              <Input
+                type="text"
+                placeholder="Enter your postcode"
+                value={postcode}
+                onChange={(e) => setPostcode(e.target.value)}
+                className="flex-grow bg-cyber-black text-matrix-green border-matrix-green placeholder-matrix-green placeholder-opacity-50 focus:ring-matrix-green"
+              />
+              <Button type="submit" className="bg-neon-purple hover:bg-purple-700 text-cyber-black font-bold shadow-purple-glow">SCAN</Button>
+            </div>
+          </form>
+
+          {/* Display crime data results */}
+          {crimeData.length > 0 && (
+            <div className="space-y-8">
+              {/* Phone Theft Likelihood Card */}
+              <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
+                <CardHeader>
+                  <CardTitle className="text-2xl text-center text-matrix-green">
+                    Phone Theft Likelihood: <span className="text-cyber-yellow font-bold">
+                    {getPhoneStolenLikelihood(crimeData.length)}
+                    </span>
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Your Area Crime Data Card */}
+                <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center text-matrix-green">
+                      Your Area
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-3xl font-bold text-neon-purple">{crimeData.length}</p>
+                    <p className="text-sm text-matrix-green opacity-70">Phone Thefts (Last Month)</p>
+                  </CardContent>
+                </Card>
+
+                {/* Soho (Highest Risk Area) Crime Data Card */}
+                <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center text-matrix-green">
+                      Soho (Highest Risk Area)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-3xl font-bold text-cyber-yellow">{SohoCrimeData.numberOfCrimes}</p>
+                    <p className="text-sm text-matrix-green opacity-70">Phone Thefts (Last Month)</p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
