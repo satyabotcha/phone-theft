@@ -67,7 +67,7 @@ export default function Home() {
       setCrimeData(crimeData);
       
     } catch (error) {
-      setError("An error occurred. Please check your postcode and try again.")
+      setError("Please enter a valid postcode")
     }
   }
 
@@ -108,15 +108,22 @@ export default function Home() {
           
           {/* Postcode input form */}
           <form onSubmit={handleSubmit} className="mb-8">
-            <div className="flex gap-4">
-              <Input
-                type="text"
-                placeholder="Enter your postcode"
-                value={postcode}
-                onChange={(e) => setPostcode(e.target.value)}
-                className="flex-grow bg-cyber-black text-matrix-green border-matrix-green placeholder-matrix-green placeholder-opacity-50 focus:ring-matrix-green"
-              />
-              <Button type="submit" className="bg-neon-purple hover:bg-purple-700 text-cyber-black font-bold shadow-purple-glow">SCAN</Button>
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-4">
+                <Input
+                  type="text"
+                  placeholder="Enter your postcode"
+                  value={postcode}
+                  onChange={(e) => setPostcode(e.target.value)}
+                  className={`flex-grow bg-cyber-black text-matrix-green border-matrix-green placeholder-matrix-green placeholder-opacity-50 focus:ring-matrix-green ${error ? 'border-red-500' : ''}`}
+                  aria-invalid={error ? 'true' : 'false'}
+                  aria-describedby={error ? 'postcode-error' : undefined}
+                />
+                <Button type="submit" className="bg-neon-purple hover:bg-purple-700 text-cyber-black font-bold shadow-purple-glow">SCAN</Button>
+              </div>
+              {error && (
+                <p id="postcode-error" className="text-red-500 text-sm mt-1">{error}</p>
+              )}
             </div>
           </form>
 
