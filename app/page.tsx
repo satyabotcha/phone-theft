@@ -111,7 +111,8 @@ export default function Home() {
                   placeholder="Enter your postcode"
                   value={postcode}
                   onChange={(e) => setPostcode(e.target.value)}
-                  className={`flex-grow bg-cyber-black text-matrix-green border-matrix-green placeholder-matrix-green placeholder-opacity-50 focus:ring-matrix-green ${error ? 'border-red-500' : ''}`}
+                  className={`flex-grow bg-cyber-black text-matrix-green border-matrix-green placeholder-matrix-green placeholder-opacity-50 focus:ring-matrix-green text-base sm:text-sm ${error ? 'border-red-500' : ''}`}
+                  style={{ fontSize: 'max(16px, 1rem)' }}
                   aria-invalid={error ? 'true' : 'false'}
                   aria-describedby={error ? 'postcode-error' : undefined}
                 />
