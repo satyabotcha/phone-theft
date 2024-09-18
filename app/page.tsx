@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Head from 'next/head';
 
 // Reference data for Soho crime statistics
 const SohoCrimeData = {
@@ -82,9 +81,6 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-      </Head>
       <div className="min-h-screen bg-cyber-black text-matrix-green py-8 px-4 sm:px-6 lg:px-8 font-matrix relative overflow-hidden">
         {/* Matrix background animation */}
         <div className="absolute inset-0 opacity-30 pointer-events-none">
@@ -109,7 +105,7 @@ export default function Home() {
           {/* Postcode input form */}
           <form onSubmit={handleSubmit} className="mb-8">
             <div className="flex flex-col gap-2">
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <Input
                   type="text"
                   placeholder="Enter your postcode"
@@ -119,7 +115,7 @@ export default function Home() {
                   aria-invalid={error ? 'true' : 'false'}
                   aria-describedby={error ? 'postcode-error' : undefined}
                 />
-                <Button type="submit" className="bg-neon-purple hover:bg-purple-700 text-cyber-black font-bold shadow-purple-glow">SCAN</Button>
+                <Button type="submit" className="bg-neon-purple hover:bg-purple-700 text-cyber-black font-bold shadow-purple-glow w-full sm:w-auto">SCAN</Button>
               </div>
               {error && (
                 <p id="postcode-error" className="text-red-500 text-sm mt-1">{error}</p>
