@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import dynamic from 'next/dynamic';
+
+const MapPage = dynamic(() => import('./map/page'), { ssr: false });
 
 // Reference data for Soho crime statistics
 const SohoCrimeData = {
@@ -19,6 +22,7 @@ export default function Home() {
   const [crimeData, setCrimeData] = useState([]);
   const [error, setError] = useState("")
   const [matrixChars, setMatrixChars] = useState<string[][]>([]);
+  const [mapData, setMapData] = useState<{ latitude: number; longitude: number } | null>(null);
 
   // Effect to generate matrix characters for background animation
   useEffect(() => {
@@ -54,7 +58,6 @@ export default function Home() {
     e.preventDefault();
     if (!postcode.trim()) {
       setError("Please enter a postcode.")
-      console.log(error)
       return
     }
 
@@ -64,7 +67,7 @@ export default function Home() {
       const { latitude, longitude } = await getLatitudeAndLongitude(postcode);
       const crimeData = await getCrimeData(latitude, longitude);
       setCrimeData(crimeData);
-      
+      setMapData({ latitude, longitude });
     } catch (error) {
       setError("Please enter a valid postcode")
     }
@@ -138,37 +141,30 @@ export default function Home() {
                 </CardHeader>
               </Card>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Your Area Crime Data Card */}
+              {/* Map */}
+              {mapData && (
                 <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
                   <CardHeader>
                     <CardTitle className="text-lg flex items-center text-matrix-green">
-                      Your Area
+                      Phone Theft Hotspots
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-3xl font-bold text-neon-purple">{crimeData.length}</p>
-                    <p className="text-sm text-matrix-green opacity-70">Phone Thefts (Last Month)</p>
+                    <MapPage 
+                      latitude={mapData.latitude} 
+                      longitude={mapData.longitude} 
+                      crimeData={crimeData.map(crime => ({
+                        latitude: parseFloat(crime.location.latitude),
+                        longitude: parseFloat(crime.location.longitude)
+                      }))}
+                    />
                   </CardContent>
                 </Card>
-
-                {/* Soho (Highest Risk Area) Crime Data Card */}
-                <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
-                  <CardHeader>
-                    <CardTitle className="text-lg flex items-center text-matrix-green">
-                      Soho (Highest Risk Area)
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-3xl font-bold text-cyber-yellow">{SohoCrimeData.numberOfCrimes}</p>
-                    <p className="text-sm text-matrix-green opacity-70">Phone Thefts (Last Month)</p>
-                  </CardContent>
-                </Card>
-              </div>
+              )}
             </div>
           )}
         </div>
       </div>
     </>
-  )
+  );
 }
