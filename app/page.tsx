@@ -22,7 +22,7 @@ export default function Home() {
   const [crimeData, setCrimeData] = useState([]);
   const [error, setError] = useState("")
   const [matrixChars, setMatrixChars] = useState<string[][]>([]);
-  const [mapData, setMapData] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [mapCenter, setMapCenter] = useState<{ latitude: number; longitude: number } | null>(null);
 
   // Effect to generate matrix characters for background animation
   useEffect(() => {
@@ -65,9 +65,9 @@ export default function Home() {
 
     try {
       const { latitude, longitude } = await getLatitudeAndLongitude(postcode);
+      setMapCenter({ latitude, longitude });
       const crimeData = await getCrimeData(latitude, longitude);
       setCrimeData(crimeData);
-      setMapData({ latitude, longitude });
     } catch (error) {
       setError("Please enter a valid postcode")
     }
@@ -142,25 +142,19 @@ export default function Home() {
               </Card>
 
               {/* Map */}
-              {mapData && (
-                <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
-                  <CardHeader>
+              <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
+                <CardHeader>
                     <CardTitle className="text-lg flex items-center text-matrix-green">
                       Phone Theft Hotspots
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <MapPage 
-                      latitude={mapData.latitude} 
-                      longitude={mapData.longitude} 
-                      crimeData={crimeData.map(crime => ({
-                        latitude: parseFloat(crime.location.latitude),
-                        longitude: parseFloat(crime.location.longitude)
-                      }))}
-                    />
-                  </CardContent>
-                </Card>
-              )}
+                  crimeData={crimeData}
+                  mapCenter={mapCenter ?? { latitude: 0, longitude: 0 }}
+                />
+              </CardContent>
+            </Card>
             </div>
           )}
         </div>

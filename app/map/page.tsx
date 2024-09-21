@@ -4,16 +4,19 @@ import { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-interface MapPageProps {
-  latitude: number;
-  longitude: number;
-  crimeData: Array<{ latitude: number; longitude: number; }>;
+interface CrimeData {
+    location: {
+        longitude: number;
+        latitude: number;
+    };
 }
 
-export default function MapPage({ latitude, longitude, crimeData }: MapPageProps) {
+
+export default function MapPage({crimeData, mapCenter}: {crimeData: CrimeData[], mapCenter: { latitude: number; longitude: number }}) {
     const mapContainer = useRef(null);
 
     useEffect(() => {
+        console.log(mapCenter);
         if (mapContainer.current) {
             const map = new maplibregl.Map({
                 container: mapContainer.current,
@@ -48,7 +51,7 @@ export default function MapPage({ latitude, longitude, crimeData }: MapPageProps
                         }
                     ],
                 },
-                center: [longitude, latitude],
+                center: [mapCenter.longitude, mapCenter.latitude],
                 zoom: 13
             });
 
@@ -57,12 +60,12 @@ export default function MapPage({ latitude, longitude, crimeData }: MapPageProps
                     type: 'geojson',
                     data: {
                         type: 'FeatureCollection',
-                        features: crimeData.map(crime => ({
+                            features: crimeData.map(crime => ({
                             type: 'Feature',
                             properties: {},
                             geometry: {
                                 type: 'Point',
-                                coordinates: [crime.longitude, crime.latitude]
+                                coordinates: [crime.location.longitude, crime.location.latitude]
                             }
                         }))
                     }
@@ -94,7 +97,7 @@ export default function MapPage({ latitude, longitude, crimeData }: MapPageProps
 
             return () => map.remove();
         }
-    }, [latitude, longitude, crimeData]);
+    }, [crimeData]);
 
     return <div ref={mapContainer} style={{ width: '100%', height: '400px' }} />;
 }
