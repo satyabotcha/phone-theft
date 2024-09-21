@@ -23,6 +23,28 @@ export default function Home() {
   const [error, setError] = useState("")
   const [matrixChars, setMatrixChars] = useState<string[][]>([]);
   const [mapCenter, setMapCenter] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [usingCurrentLocation, setUsingCurrentLocation] = useState(true);
+
+  function getCurrentPosition() {
+    setError("");
+    setUsingCurrentLocation(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setMapCenter({ latitude, longitude });
+        try {
+          const crimeData = await getCrimeData(latitude, longitude);
+          setCrimeData(crimeData);
+        } catch (error) {
+          setError("Failed to fetch crime data");
+        }
+      },
+      (error) => {
+        setError("Failed to get your location. Please enter a postcode.");
+        setUsingCurrentLocation(false);
+      }
+    );
+  }
 
   // Effect to generate matrix characters for background animation
   useEffect(() => {
@@ -56,6 +78,10 @@ export default function Home() {
   // Handler for form submission
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (usingCurrentLocation) {
+      getCurrentPosition();
+      return;
+    }
     if (!postcode.trim()) {
       setError("Please enter a postcode.")
       return
@@ -76,7 +102,6 @@ export default function Home() {
   // Function to determine likelihood of phone theft based on crime data
   function getPhoneStolenLikelihood(thefts: number) {
     const crimeRatio = thefts / SohoCrimeData.numberOfCrimes;
-    if (crimeRatio >= 0.75) return "Very High";
     if (crimeRatio >= 0.5) return "High";
     if (crimeRatio >= 0.25) return "Moderate";
     return "Low";
@@ -112,8 +137,11 @@ export default function Home() {
                 <Input
                   type="text"
                   placeholder="Enter your postcode"
-                  value={postcode}
-                  onChange={(e) => setPostcode(e.target.value)}
+                  value={usingCurrentLocation ? "Current Location" : postcode}
+                  onChange={(e) => {
+                    setPostcode(e.target.value); 
+                    setUsingCurrentLocation(false);
+                  }}
                   className={`flex-grow bg-cyber-black text-matrix-green border-matrix-green placeholder-matrix-green placeholder-opacity-50 focus:ring-matrix-green text-base sm:text-sm ${error ? 'border-red-500' : ''}`}
                   style={{ fontSize: 'max(16px, 1rem)' }}
                   aria-invalid={error ? 'true' : 'false'}
