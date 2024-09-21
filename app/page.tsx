@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import dynamic from 'next/dynamic';
 
-const MapPage = dynamic(() => import('./map/page'), { ssr: false });
+const MapPage = dynamic(() => import('../components/ui/map'), { ssr: false });
 
 // Reference data for Soho crime statistics
 const SohoCrimeData = {
