@@ -41,6 +41,7 @@ export default function Home() {
       },
       (error) => {
         setError("Failed to get your location. Please enter a postcode.");
+        console.log(error)
         setUsingCurrentLocation(false);
       }
     );
