@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 // Define the structure of crime data
 interface CrimeData {
     location: {
@@ -117,7 +117,14 @@ export default function MapPage({crimeData, mapCenter}: {crimeData: CrimeData[],
 
     // Render the map container with a loading spinner
     return (
-        <div style={{ position: 'relative', width: '100%', height: '400px' }}>
+        <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
+                <CardHeader>
+                    <CardTitle className="text-lg flex items-center text-matrix-green">
+                      {`Phone Theft Hotspots`}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                  <div style={{ position: 'relative', width: '100%', height: '400px' }}>
             {isLoading && (
                 <div style={{
                     position: 'absolute',
@@ -131,5 +138,7 @@ export default function MapPage({crimeData, mapCenter}: {crimeData: CrimeData[],
             )}
             <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />
         </div>
+              </CardContent>
+            </Card>
     );
 }
