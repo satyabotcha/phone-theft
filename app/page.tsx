@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import dynamic from 'next/dynamic';
 import MatrixBackground from "@/components/ui/matrixBackground";
 import { getLatitudeAndLongitude, getCrimeData, getPostcodeFromLatLong } from "@/utils/api";
