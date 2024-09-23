@@ -11,6 +11,6 @@ const SohoCrimeData = {
 export default function getPhoneStolenLikelihood(thefts: number) {
     const crimeRatio = thefts / SohoCrimeData.numberOfCrimes;
     if (crimeRatio >= 0.5) return "High";
-    if (crimeRatio >= 0.25) return "Moderate";
+    if (crimeRatio >= 0.10) return "Moderate";
     return "Low";
   }
