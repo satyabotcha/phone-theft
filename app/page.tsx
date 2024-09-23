@@ -35,6 +35,8 @@ export default function Home() {
         try {
           const crimeData = await getCrimeData(latitude, longitude);
           setCrimeData(crimeData);
+          const postcode = await getPostcodeFromLatLong(latitude, longitude);
+          setPostcode(postcode);
         } catch (error) {
           setError("Failed to fetch crime data");
         }
@@ -46,6 +48,18 @@ export default function Home() {
       }
     );
   }
+
+  // Function to get postcode from latitude and longitude
+async function getPostcodeFromLatLong(latitude: number, longitude: number) {
+  const response = await fetch(`https://api.postcodes.io/postcodes?lon=${longitude}&lat=${latitude}`);
+  const data = await response.json();
+  if (data.status === 200 && data.result.length > 0) {
+    return data.result[0].postcode;
+  } else {
+    throw new Error("Failed to fetch postcode");
+    }
+  }
+
 
   // Effect to generate matrix characters for background animation
   useEffect(() => {
@@ -102,6 +116,7 @@ export default function Home() {
 
   // Function to determine likelihood of phone theft based on crime data
   function getPhoneStolenLikelihood(thefts: number) {
+    console.log(thefts)
     const crimeRatio = thefts / SohoCrimeData.numberOfCrimes;
     if (crimeRatio >= 0.5) return "High";
     if (crimeRatio >= 0.25) return "Moderate";
@@ -128,7 +143,7 @@ export default function Home() {
         </div>
         
         <div className="max-w-3xl mx-auto relative z-10">
-          <h1 className="text-5xl font-bold text-center mb-4 text-matrix-green font-matrix tracking-wider">Is my phone safe?</h1>
+          <h1 className="text-4xl font-bold text-center mb-4 text-matrix-green font-matrix tracking-wider">Is my phone safe in London?</h1>
           <h2 className="text-2xl text-center mb-8 text-matrix-green font-matrix">Check how likely your phone will be stolen in your area</h2>
           
           {/* Postcode input form */}
@@ -138,7 +153,7 @@ export default function Home() {
                 <Input
                   type="text"
                   placeholder="Enter your postcode"
-                  value={usingCurrentLocation ? "Current Location" : postcode}
+                  value={postcode ? postcode : "Current Location"}
                   onChange={(e) => {
                     setPostcode(e.target.value); 
                     setUsingCurrentLocation(false);
@@ -174,7 +189,7 @@ export default function Home() {
               <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
                 <CardHeader>
                     <CardTitle className="text-lg flex items-center text-matrix-green">
-                      Phone Theft Hotspots
+                      {`Phone Theft Hotspots Around ${postcode.toUpperCase()}`}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
