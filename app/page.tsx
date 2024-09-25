@@ -9,18 +9,18 @@ import MatrixBackground from "@/components/ui/matrixBackground";
 import { getLatitudeAndLongitude, getCrimeData, getPostcodeFromLatLong } from "@/utils/api";
 import getPhoneStolenLikelihood from "@/utils/crimeRatio";
 
-
+// Dynamically import the MapPage component to avoid SSR issues
 const MapPage = dynamic(() => import('../components/ui/map'), { ssr: false });
 
-
 export default function Home() {
-  // State variables
+  // State variables for managing user input, crime data, and UI state
   const [postcode, setPostcode] = useState("");
   const [crimeData, setCrimeData] = useState([]);
   const [error, setError] = useState("")
   const [mapCenter, setMapCenter] = useState<{ latitude: number; longitude: number } | null>(null);
   const [usingCurrentLocation, setUsingCurrentLocation] = useState(true);
 
+  // Function to get and process the user's current location
   function getCurrentPosition() {
     setError("");
     setUsingCurrentLocation(true);
@@ -29,6 +29,7 @@ export default function Home() {
         const { latitude, longitude } = position.coords;
         setMapCenter({ latitude, longitude });
         try {
+          // Fetch crime data and postcode based on current location
           const crimeData = await getCrimeData(latitude, longitude);
           setCrimeData(crimeData);
           const postcode = await getPostcodeFromLatLong(latitude, longitude);
@@ -45,7 +46,6 @@ export default function Home() {
     );
   }
 
-
   // Handler for form submission
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -61,6 +61,7 @@ export default function Home() {
     setError("")
 
     try {
+      // Fetch latitude and longitude from postcode, then get crime data
       const { latitude, longitude } = await getLatitudeAndLongitude(postcode);
       setMapCenter({ latitude, longitude });
       const crimeData = await getCrimeData(latitude, longitude);
@@ -69,7 +70,6 @@ export default function Home() {
       setError("Please enter a valid postcode")
     }
   }
-
 
   return (
     <>
@@ -120,8 +120,7 @@ export default function Home() {
                 </CardHeader>
               </Card>
 
-              {/* Map */}
-              
+              {/* Map component to display crime data */}
               <MapPage 
                 crimeData={crimeData}
                 mapCenter={mapCenter ?? { latitude: 0, longitude: 0 }}
