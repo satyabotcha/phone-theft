@@ -13,7 +13,7 @@ interface CrimeData {
 }
 
 // Main component for rendering the map
-export default function MapPage({crimeData, mapCenter}: {crimeData: CrimeData[], mapCenter: { latitude: number; longitude: number }}) {
+export default function MapPage({crimeData, mapCenter, postcode}: {crimeData: CrimeData[], mapCenter: { latitude: number; longitude: number }, postcode: string}) {
     // Create a ref to hold the map container DOM element
     const mapContainer = useRef(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -120,7 +120,7 @@ export default function MapPage({crimeData, mapCenter}: {crimeData: CrimeData[],
         <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
                 <CardHeader>
                     <CardTitle className="text-lg flex items-center text-matrix-green">
-                      {`Phone Theft Hotspots`}
+                      {`Phone Theft Hotspots: ${postcode.toUpperCase()}`}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
