@@ -50,11 +50,11 @@ export default function Home() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement> | null) {
     if (e) e.preventDefault();
 
-    const postcodeSubmitted = postcodeRef.current.value;
+    const postcodeSubmitted = postcodeRef.current?.value ?? '';
 
     if (!postcodeSubmitted.trim()) {
-      setError("Please enter a postcode.")
-      return
+      setError("Please enter a postcode.");
+      return;
     }
 
     try {
