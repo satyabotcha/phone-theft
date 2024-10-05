@@ -64,7 +64,7 @@ export default function Home() {
       const crimeData = await getCrimeData(latitude, longitude);
       setCrimeData(crimeData);
       setPostcode(postcodeSubmitted); // Update state after successful API call
-      console.log(crimeData)
+      setError("")
     } 
     catch (error) {
       setError("Please enter a valid UK postcode")
