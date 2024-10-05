@@ -93,21 +93,21 @@ export default function Home() {
                   type="text"
                   placeholder="Enter your postcode"
                   ref={postcodeRef}
-                  className={`flex-grow bg-cyber-black text-matrix-green border-matrix-green placeholder-matrix-green placeholder-opacity-50 focus:ring-matrix-green text-base sm:text-sm ${error ? 'border-red-500' : ''}`}
+                  className={`flex-grow bg-cyber-black text-matrix-green border-matrix-green placeholder-matrix-green placeholder-opacity-50 focus:ring-matrix-green text-base sm:text-sm w-full sm:w-auto ${error ? 'border-red-500' : ''}`}
                   style={{ fontSize: 'max(16px, 1rem)' }}
                   aria-invalid={error ? 'true' : 'false'}
                   aria-describedby={error ? 'postcode-error' : undefined}
                 />
                 {/* Action buttons */}
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full sm:w-auto">
                   <Button 
                     type="button" 
                     onClick={getCurrentPosition} 
-                    className="bg-neon-blue hover:bg-blue-700 text-cyber-black font-bold shadow-blue-glow"
+                    className="bg-neon-green hover:bg-green-700 text-cyber-black font-bold shadow-green-glow flex-grow sm:flex-grow-0"
                   >
-                    LOCATE
+                    CURRENT LOCATION
                   </Button>
-                  <Button type="submit" className="bg-neon-purple hover:bg-purple-700 text-cyber-black font-bold shadow-purple-glow">SCAN</Button>
+                  <Button type="submit" className="bg-neon-purple hover:bg-purple-700 text-cyber-black font-bold shadow-purple-glow flex-grow sm:flex-grow-0">SCAN</Button>
                 </div>
               </div>
               {/* Error message display */}
