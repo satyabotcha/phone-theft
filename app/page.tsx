@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import MatrixBackground from "@/components/ui/matrixBackground";
 import { getLatitudeAndLongitude, getCrimeData, getPostcodeFromLatLong } from "@/utils/api";
 import getPhoneStolenLikelihood from "@/utils/crimeRatio";
+import { Twitter, MessageCircle, MessageSquare } from 'lucide-react';
 
 // Dynamically import the MapPage component to avoid SSR issues
 const MapPage = dynamic(() => import('../components/ui/map'), { ssr: false });
@@ -18,6 +19,7 @@ export default function Home() {
   const [crimeData, setCrimeData] = useState([]);
   const [error, setError] = useState("")
   const [mapCenter, setMapCenter] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [shareText, setShareText] = useState('');
 
   const postcodeRef = useRef<HTMLInputElement>(null);
 
@@ -70,6 +72,31 @@ export default function Home() {
       setError("Please enter a valid UK postcode")
     }
   }
+
+  // Move this effect outside of the render cycle
+  useEffect(() => {
+    if (crimeData.length > 0) {
+      const risk = getPhoneStolenLikelihood(crimeData.length);
+      const text = `Is Your Phone at Risk? \u{1F4F1}\u{1F6A8}\n\n` +
+        `I just checked my phone theft risk on IsMyPhoneSafe – it's ${risk} in my area!\n\n` +
+        `\u{1F517} What about you? https://ismyphonesafe.co.uk`;
+      setShareText(text);
+    }
+  }, [crimeData, postcode]);
+
+
+
+  // Function to handle sharing
+  const handleShare = (platform: 'twitter' | 'whatsapp' | 'imessage') => {
+    const encodedText = encodeURIComponent(shareText);
+    const encodedUrl = encodeURIComponent(window.location.href);
+    const urls = {
+      twitter: `https://twitter.com/intent/tweet?text=${encodedText}`,
+      whatsapp: `https://wa.me/?text=${encodedText}`,
+      imessage: `sms:&body=${encodedText}`
+    };
+    window.open(urls[platform], '_blank');
+  };
 
   return (
     <>
@@ -131,12 +158,43 @@ export default function Home() {
                 </CardHeader>
               </Card>
 
+              
+
               {/* Map component to display crime data */}
               <MapPage 
                 crimeData={crimeData}
                 mapCenter={mapCenter ?? { latitude: 0, longitude: 0 }}
                 postcode={postcode}
               />
+
+              {/* Sharing Card */}
+              <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
+                <CardHeader>
+                  <CardTitle className="text-xl text-center text-matrix-green mb-4">
+                    Help Your Friends Keep Their Phone's Safe
+                  </CardTitle>
+                  <div className="flex justify-center space-x-4">
+                    <Button
+                      onClick={() => handleShare('twitter')}
+                      className="bg-cyber-black border-matrix-green hover:bg-matrix-green hover:text-cyber-black text-matrix-green font-bold shadow-neon-glow p-2"
+                    >
+                      <Twitter className="h-5 w-5" />
+                    </Button>
+                    <Button
+                      onClick={() => handleShare('whatsapp')}
+                      className="bg-cyber-black border-matrix-green hover:bg-matrix-green hover:text-cyber-black text-matrix-green font-bold shadow-neon-glow p-2"
+                    >
+                      <MessageCircle className="h-5 w-5" />
+                    </Button>
+                    <Button
+                      onClick={() => handleShare('imessage')}
+                      className="bg-cyber-black border-matrix-green hover:bg-matrix-green hover:text-cyber-black text-matrix-green font-bold shadow-neon-glow p-2"
+                    >
+                      <MessageSquare className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </CardHeader>
+              </Card>
 
             </div>
           )}
