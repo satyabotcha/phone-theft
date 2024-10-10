@@ -89,7 +89,6 @@ export default function Home() {
   // Function to handle sharing
   const handleShare = (platform: 'twitter' | 'whatsapp' | 'imessage') => {
     const encodedText = encodeURIComponent(shareText);
-    const encodedUrl = encodeURIComponent(window.location.href);
     const urls = {
       twitter: `https://twitter.com/intent/tweet?text=${encodedText}`,
       whatsapp: `https://wa.me/?text=${encodedText}`,
@@ -171,7 +170,7 @@ export default function Home() {
               <Card className="bg-cyber-black border-matrix-green shadow-neon-glow">
                 <CardHeader>
                   <CardTitle className="text-xl text-center text-matrix-green mb-4">
-                    Help Your Friends Keep Their Phone's Safe
+                    Help Your Friends Keep Their Phone Safe
                   </CardTitle>
                   <div className="flex justify-center space-x-4">
                     <Button
