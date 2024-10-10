@@ -21,6 +21,7 @@ export default function Home() {
   const [mapCenter, setMapCenter] = useState<{ latitude: number; longitude: number } | null>(null);
   const [shareText, setShareText] = useState('');
 
+  // Ref for the postcode input field
   const postcodeRef = useRef<HTMLInputElement>(null);
 
   // Function to get and process the user's current location
@@ -31,6 +32,7 @@ export default function Home() {
         const { latitude, longitude } = position.coords;
         setMapCenter({ latitude, longitude });
         try {
+          // Get postcode from coordinates and update UI
           const locationPostcode = await getPostcodeFromLatLong(latitude, longitude);
           setPostcode(locationPostcode);
           if (postcodeRef.current) {
@@ -73,10 +75,11 @@ export default function Home() {
     }
   }
 
-  // Move this effect outside of the render cycle
+  // Effect to update share text when crime data changes
   useEffect(() => {
     if (crimeData.length > 0) {
       const risk = getPhoneStolenLikelihood(crimeData.length);
+      // Construct share text with emojis and risk level
       const text = `Is Your Phone at Risk? \u{1F4F1}\u{1F6A8}\n\n` +
         `I just checked my phone theft risk on IsMyPhoneSafe – it's ${risk} in my area!\n\n` +
         `\u{1F517} What about you? https://ismyphonesafe.co.uk`;
@@ -84,9 +87,7 @@ export default function Home() {
     }
   }, [crimeData, postcode]);
 
-
-
-  // Function to handle sharing
+  // Function to handle sharing on different platforms
   const handleShare = (platform: 'twitter' | 'whatsapp' | 'imessage') => {
     const encodedText = encodeURIComponent(shareText);
     const urls = {
@@ -157,8 +158,6 @@ export default function Home() {
                 </CardHeader>
               </Card>
 
-              
-
               {/* Map component to display crime data */}
               <MapPage 
                 crimeData={crimeData}
@@ -173,6 +172,7 @@ export default function Home() {
                     Help Your Friends Keep Their Phone Safe
                   </CardTitle>
                   <div className="flex justify-center space-x-4">
+                    {/* Share buttons for different platforms */}
                     <Button
                       onClick={() => handleShare('twitter')}
                       className="bg-cyber-black border-matrix-green hover:bg-matrix-green hover:text-cyber-black text-matrix-green font-bold shadow-neon-glow p-2"
@@ -194,7 +194,6 @@ export default function Home() {
                   </div>
                 </CardHeader>
               </Card>
-
             </div>
           )}
         </div>
